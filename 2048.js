@@ -22012,9 +22012,18 @@ if (name == null) name = nil;if (value == null) value = nil;
   function $rb_divide(lhs, rhs) {
     return (typeof(lhs) === 'number' && typeof(rhs) === 'number') ? lhs / rhs : lhs['$/'](rhs);
   }
-  var self = Opal.top, $nesting = [], nil = Opal.nil, $breaker = Opal.breaker, $slice = Opal.slice, $klass = Opal.klass, board = nil;
+  function $rb_ge(lhs, rhs) {
+    return (typeof(lhs) === 'number' && typeof(rhs) === 'number') ? lhs >= rhs : lhs['$>='](rhs);
+  }
+  function $rb_plus(lhs, rhs) {
+    return (typeof(lhs) === 'number' && typeof(rhs) === 'number') ? lhs + rhs : lhs['$+'](rhs);
+  }
+  function $rb_minus(lhs, rhs) {
+    return (typeof(lhs) === 'number' && typeof(rhs) === 'number') ? lhs - rhs : lhs['$-'](rhs);
+  }
+  var self = Opal.top, $nesting = [], nil = Opal.nil, $breaker = Opal.breaker, $slice = Opal.slice, $klass = Opal.klass, $truthy = Opal.truthy, $hash2 = Opal.hash2, $send = Opal.send, board = nil;
 
-  Opal.add_stubs(['$require', '$attr_reader', '$canvas_id', '$canvas', '$floor', '$/', '$height', '$width', '$new', '$draw']);
+  Opal.add_stubs(['$require', '$attr_reader', '$canvas_id', '$canvas', '$floor', '$/', '$height', '$width', '$blank_state', '$draw_canvas', '$>=', '$context', '$+', '$each', '$max_x', '$max_y', '$[]=', '$-', '$new']);
   
   self.$require("opal");
   self.$require("forwardable");
@@ -22023,11 +22032,11 @@ if (name == null) name = nil;if (value == null) value = nil;
     function $Board(){};
     var self = $Board = $klass($base, $super, 'Board', $Board);
 
-    var def = self.$$proto, $nesting = [self].concat($parent_nesting), TMP_Board_initialize_1, TMP_Board_canvas_id_2, TMP_Board_draw_3;
+    var def = self.$$proto, $nesting = [self].concat($parent_nesting), TMP_Board_initialize_1, TMP_Board_canvas_id_2, TMP_Board_draw_canvas_3, TMP_Board_blank_state_6;
 
     
     self.$attr_reader("height", "width", "canvas", "context", "max_x", "max_y");
-    Opal.const_set($nesting[0], 'CELL_HEIGHT', 1513);
+    Opal.const_set($nesting[0], 'CELL_HEIGHT', 15);
     Opal.const_set($nesting[0], 'CELL_WIDTH', 15);
     
     Opal.defn(self, '$initialize', TMP_Board_initialize_1 = function $$initialize() {
@@ -22039,7 +22048,10 @@ if (name == null) name = nil;if (value == null) value = nil;
       self.canvas = document.getElementById(self.$canvas_id());
       self.context = self.$canvas().getContext('2d');
       self.max_x = $rb_divide(self.$height(), Opal.const_get_relative($nesting, 'CELL_HEIGHT')).$floor();
-      return (self.max_y = $rb_divide(self.$width(), Opal.const_get_relative($nesting, 'CELL_WIDTH')).$floor());
+      self.max_y = $rb_divide(self.$width(), Opal.const_get_relative($nesting, 'CELL_WIDTH')).$floor();
+      self.state = self.$blank_state();
+      self.seed = [];
+      return self.$draw_canvas();
     }, TMP_Board_initialize_1.$$arity = 0);
     
     Opal.defn(self, '$canvas_id', TMP_Board_canvas_id_2 = function $$canvas_id() {
@@ -22047,12 +22059,46 @@ if (name == null) name = nil;if (value == null) value = nil;
 
       return "board"
     }, TMP_Board_canvas_id_2.$$arity = 0);
-    return (Opal.defn(self, '$draw', TMP_Board_draw_3 = function $$draw() {
-      var self = this;
+    
+    Opal.defn(self, '$draw_canvas', TMP_Board_draw_canvas_3 = function $$draw_canvas() {
+      var $a, self = this, x = nil, y = nil;
 
-      return nil
-    }, TMP_Board_draw_3.$$arity = 0), nil) && 'draw';
+      
+      self.$canvas().width  = self.$width();
+      self.$canvas().height = self.$height();
+      x = 0.5;
+      while (!($truthy($rb_ge(x, self.$width())))) {
+        
+        self.$context().moveTo(x, 0);
+        self.$context().lineTo(x, self.$height());
+        x = $rb_plus(x, Opal.const_get_relative($nesting, 'CELL_WIDTH'));
+      };
+      y = 0.5;
+      while (!($truthy($rb_ge(y, self.$height())))) {
+        
+        self.$context().moveTo(0, y);
+        self.$context().lineTo(self.$width(), y);
+        y = $rb_plus(y, Opal.const_get_relative($nesting, 'CELL_HEIGHT'));
+      };
+      self.$context().strokeStyle = "#eee";
+      return self.$context().stroke();
+    }, TMP_Board_draw_canvas_3.$$arity = 0);
+    return (Opal.defn(self, '$blank_state', TMP_Board_blank_state_6 = function $$blank_state() {
+      var TMP_4, self = this, h = nil;
+
+      
+      h = $hash2([], {});
+      $send(Opal.Range.$new(0, self.$max_x(), false), 'each', [], (TMP_4 = function(x){var self = TMP_4.$$s || this, TMP_5;
+if (x == null) x = nil;
+      return $send(Opal.Range.$new(0, self.$max_y(), false), 'each', [], (TMP_5 = function(y){var self = TMP_5.$$s || this, $writer = nil;
+if (y == null) y = nil;
+        
+          $writer = [[x, y], 0];
+          $send(h, '[]=', Opal.to_a($writer));
+          return $writer[$rb_minus($writer["length"], 1)];}, TMP_5.$$s = self, TMP_5.$$arity = 1, TMP_5))}, TMP_4.$$s = self, TMP_4.$$arity = 1, TMP_4));
+      return h;
+    }, TMP_Board_blank_state_6.$$arity = 0), nil) && 'blank_state';
   })($nesting[0], null, $nesting);
   board = Opal.const_get_relative($nesting, 'Board').$new();
-  return board.$draw();
+  return board.$draw_canvas();
 })(Opal);
