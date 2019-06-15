@@ -9,7 +9,7 @@ require 'ostruct'
 class Board
   attr_reader :height, :width, :canvas, :context, :max_x, :max_y
 
-  CELL_HEIGHT = 1513
+  CELL_HEIGHT = 15
   CELL_WIDTH  = 15
 
   def initialize
