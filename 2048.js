@@ -24937,7 +24937,7 @@ if (name == null) name = nil;if (value == null) value = nil;
   }
   var self = Opal.top, $nesting = [], nil = Opal.nil, $breaker = Opal.breaker, $slice = Opal.slice, $klass = Opal.klass, $send = Opal.send, $truthy = Opal.truthy, $hash2 = Opal.hash2, board = nil;
 
-  Opal.add_stubs(['$require', '$attr_reader', '$canvas_id', '$canvas', '$floor', '$/', '$height', '$width', '$blank_state', '$draw_canvas', '$add_mouse_event_listener', '$*', '$context', '$+', '$-', '$on', '$find', '$get_cursor_position', '$x', '$y', '$fill_cell', '$<<', '$seed', '$unfill_cell', '$delete', '$>=', '$each', '$max_x', '$max_y', '$[]=', '$page_x', '$page_y', '$[]', '$Document', '$scrollLeft', '$documentElement', '$scrollTop', '$body', '$new']);
+  Opal.add_stubs(['$require', '$attr_reader', '$attr_accessor', '$canvas_id', '$canvas', '$floor', '$/', '$height', '$width', '$blank_state', '$draw_canvas', '$add_mouse_event_listener', '$add_demo_event_listener', '$*', '$context', '$+', '$-', '$on', '$find', '$get_cursor_position', '$x', '$y', '$fill_cell', '$<<', '$seed', '$unfill_cell', '$delete', '$>=', '$each', '$max_x', '$max_y', '$[]=', '$page_x', '$page_y', '$[]', '$Document', '$scrollLeft', '$documentElement', '$scrollTop', '$body', '$new', '$ctrl_b_pressed?', '$==', '$ctrl_key', '$which']);
   
   self.$require("opal");
   self.$require("opal-jquery");
@@ -24947,10 +24947,11 @@ if (name == null) name = nil;if (value == null) value = nil;
     function $Board(){};
     var self = $Board = $klass($base, $super, 'Board', $Board);
 
-    var def = self.$$proto, $nesting = [self].concat($parent_nesting), TMP_Board_initialize_1, TMP_Board_fill_cell_2, TMP_Board_unfill_cell_3, TMP_Board_canvas_id_4, TMP_Board_add_mouse_event_listener_7, TMP_Board_draw_canvas_8, TMP_Board_blank_state_11, TMP_Board_get_cursor_position_12;
+    var def = self.$$proto, $nesting = [self].concat($parent_nesting), TMP_Board_initialize_1, TMP_Board_fill_cell_2, TMP_Board_unfill_cell_3, TMP_Board_canvas_id_4, TMP_Board_add_mouse_event_listener_7, TMP_Board_draw_canvas_8, TMP_Board_blank_state_11, TMP_Board_get_cursor_position_12, TMP_Board_add_demo_event_listener_15, TMP_Board_ctrl_d_pressed$q_16;
 
     
     self.$attr_reader("height", "width", "canvas", "context", "max_x", "max_y");
+    self.$attr_accessor("state", "seed");
     Opal.const_set($nesting[0], 'CELL_HEIGHT', 15);
     Opal.const_set($nesting[0], 'CELL_WIDTH', 15);
     
@@ -24967,7 +24968,8 @@ if (name == null) name = nil;if (value == null) value = nil;
       self.state = self.$blank_state();
       self.seed = [];
       self.$draw_canvas();
-      return self.$add_mouse_event_listener();
+      self.$add_mouse_event_listener();
+      return self.$add_demo_event_listener();
     }, TMP_Board_initialize_1.$$arity = 0);
     
     Opal.defn(self, '$fill_cell', TMP_Board_fill_cell_2 = function $$fill_cell(x, y) {
@@ -25054,7 +25056,8 @@ if (y == null) y = nil;
           return $writer[$rb_minus($writer["length"], 1)];}, TMP_10.$$s = self, TMP_10.$$arity = 1, TMP_10))}, TMP_9.$$s = self, TMP_9.$$arity = 1, TMP_9));
       return h;
     }, TMP_Board_blank_state_11.$$arity = 0);
-    return (Opal.defn(self, '$get_cursor_position', TMP_Board_get_cursor_position_12 = function $$get_cursor_position(event) {
+    
+    Opal.defn(self, '$get_cursor_position', TMP_Board_get_cursor_position_12 = function $$get_cursor_position(event) {
       var $a, self = this, x = nil, y = nil, doc = nil;
 
       
@@ -25073,7 +25076,28 @@ if (y == null) y = nil;
       x = $rb_divide(x, Opal.const_get_relative($nesting, 'CELL_WIDTH')).$floor();
       y = $rb_divide(y, Opal.const_get_relative($nesting, 'CELL_HEIGHT')).$floor();
       return Opal.const_get_relative($nesting, 'Coordinates').$new($hash2(["x", "y"], {"x": x, "y": y}));
-    }, TMP_Board_get_cursor_position_12.$$arity = 1), nil) && 'get_cursor_position';
+    }, TMP_Board_get_cursor_position_12.$$arity = 1);
+    
+    Opal.defn(self, '$add_demo_event_listener', TMP_Board_add_demo_event_listener_15 = function $$add_demo_event_listener() {
+      var TMP_13, self = this;
+
+      return $send(Opal.const_get_relative($nesting, 'Document'), 'on', ["keypress"], (TMP_13 = function(event){var self = TMP_13.$$s || this, TMP_14;
+if (event == null) event = nil;
+      if ($truthy(self['$ctrl_b_pressed?'](event))) {
+          return $send([[25, 1], [23, 2], [25, 2], [13, 3], [14, 3], [21, 3], [22, 3], [12, 4], [16, 4], [21, 4], [22, 4], [35, 4], [36, 4], [1, 5], [2, 5], [11, 5], [17, 5], [21, 5], [22, 5], [35, 5], [36, 5], [1, 6], [2, 6], [11, 6], [15, 6], [17, 6], [18, 6], [23, 6], [25, 6], [11, 7], [17, 7], [25, 7], [12, 8], [16, 8], [13, 9], [14, 9]], 'each', [], (TMP_14 = function(x, y){var self = TMP_14.$$s || this;
+if (x == null) x = nil;if (y == null) y = nil;
+          
+            self.$fill_cell(x, y);
+            return self.$seed()['$<<']([x, y]);}, TMP_14.$$s = self, TMP_14.$$arity = 2, TMP_14))
+          } else {
+          return nil
+        }}, TMP_13.$$s = self, TMP_13.$$arity = 1, TMP_13))
+    }, TMP_Board_add_demo_event_listener_15.$$arity = 0);
+    return (Opal.defn(self, '$ctrl_b_pressed?', TMP_Board_ctrl_d_pressed$q_16 = function(event) {
+      var $a, self = this;
+
+      return (($a = event.$ctrl_key()['$=='](true)) ? event.$which()['$=='](2) : event.$ctrl_key()['$=='](true))
+    }, TMP_Board_ctrl_d_pressed$q_16.$$arity = 1), nil) && 'ctrl_b_pressed?';
   })($nesting[0], null, $nesting);
   (function($base, $super, $parent_nesting) {
     function $Coordinates(){};

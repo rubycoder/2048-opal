@@ -8,6 +8,7 @@ require 'ostruct'
 
 class Board
   attr_reader :height, :width, :canvas, :context, :max_x, :max_y
+  attr_accessor :state, :seed
 
   CELL_HEIGHT = 15
   CELL_WIDTH  = 15
@@ -23,7 +24,7 @@ class Board
     @seed    = []
     draw_canvas
     add_mouse_event_listener
-    # add_demo_event_listener
+    add_demo_event_listener
   end
 
   def fill_cell(x, y)
@@ -109,6 +110,32 @@ class Board
     y = (y / CELL_HEIGHT).floor
 
     Coordinates.new(x: x, y: y)
+  end
+
+  def add_demo_event_listener
+    Document.on :keypress do |event|
+      if ctrl_b_pressed?(event)
+        [
+            [25, 1],
+            [23, 2], [25, 2],
+            [13, 3], [14, 3], [21, 3], [22, 3],
+            [12, 4], [16, 4], [21, 4], [22, 4], [35, 4], [36, 4],
+            [1, 5],  [2, 5],  [11, 5], [17, 5], [21, 5], [22, 5], [35, 5], [36, 5],
+            [1, 6],  [2, 6],  [11, 6], [15, 6], [17, 6], [18, 6], [23, 6], [25, 6],
+            [11, 7], [17, 7], [25, 7],
+            [12, 8], [16, 8],
+            [13, 9], [14, 9]
+        ].each do |x, y|
+          fill_cell(x, y)
+          seed << [x, y]
+        end
+      end
+    end
+  end
+
+  # Original source used ctrl-D, but Brave uses that to add a bookmark, so we chaned it to ctrl-B
+  def ctrl_b_pressed?(event)
+    event.ctrl_key == true && event.which == 2
   end
 end
 
