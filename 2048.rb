@@ -4,7 +4,7 @@ require 'opal'
 require 'opal-jquery'
 require 'forwardable'
 require 'ostruct'
-# require_relative 'board'
+require_relative 'interval'
 
 class Board
   attr_reader :height, :width, :canvas, :context, :max_x, :max_y
@@ -25,6 +25,7 @@ class Board
     draw_canvas
     add_mouse_event_listener
     add_demo_event_listener
+    add_enter_event_listener
   end
 
   def fill_cell(x, y)
@@ -93,6 +94,13 @@ class Board
     h
   end
 
+  def redraw_canvas
+    draw_canvas
+    state.each do |cell, liveness|
+      fill_cell(cell[0], cell[1]) if liveness == 1
+    end
+  end
+
   def get_cursor_position(event)
     if event.page_x && event.page_y
       x = event.page_x
@@ -133,10 +141,105 @@ class Board
     end
   end
 
-  # Original source used ctrl-D, but Brave uses that to add a bookmark, so we chaned it to ctrl-B
+  # Original source used ctrl-D, but Brave uses that to add a bookmark, so we changed it to ctrl-B
   def ctrl_b_pressed?(event)
     event.ctrl_key == true && event.which == 2
   end
+
+  # following methods from conway.rb
+
+  def add_enter_event_listener
+    Document.on :keypress do |event|
+      seed.each do |x, y|
+        state[[x, y]] = 1
+      end
+      run if enter_pressed?(event)
+    end
+  end
+
+  def enter_pressed?(event)
+    event.which == 13
+  end
+
+  def run
+    Interval.new do
+      tick
+    end
+  end
+
+  def tick
+    self.state = new_state
+    redraw_canvas
+  end
+
+  # below methods added en masse, probably not all needed
+
+  def new_state
+    #console.log 'in new_state'
+    new_state = Hash.new
+    state.each do |cell, _|
+      new_state[cell] = get_state_at(cell[0], cell[1])
+    end
+    new_state
+  end
+
+  def get_state_at(x, y)
+    if is_underpopulated?(x, y)
+      0
+    elsif is_living_happily?(x, y)
+      1
+    elsif is_overpopulated?(x, y)
+      0
+    elsif can_reproduce?(x, y)
+      1
+    end
+  end
+
+  # Any live cell with fewer than two live neighbours dies,
+  # as if caused by under-population.
+  def is_underpopulated?(x, y)
+    is_alive?(x, y) && population_at(x, y) < 2
+  end
+
+  # Any live cell with two or three live neighbours lives
+  # on to the next generation.
+  def is_living_happily?(x, y)
+    is_alive?(x, y) && ([2, 3].include? population_at(x, y))
+  end
+
+  # Any live cell with more than three live neighbours dies,
+  # as if by overcrowding.
+  def is_overpopulated?(x, y)
+    is_alive?(x, y) && population_at(x, y) > 3
+  end
+
+  # Any dead cell with exactly three live neighbours becomes a live cell,
+  # as if by reproduction.
+  def can_reproduce?(x, y)
+    is_dead?(x, y) && population_at(x, y) == 3
+  end
+
+  def population_at(x, y)
+    [
+        state[[x-1, y-1]],
+        state[[x-1, y  ]],
+        state[[x-1, y+1]],
+        state[[x,   y-1]],
+        state[[x,   y+1]],
+        state[[x+1, y-1]],
+        state[[x+1, y  ]],
+        state[[x+1, y+1]]
+    ].map(&:to_i).reduce(:+)
+  end
+
+  def is_alive?(x, y)
+    state[[x, y]] == 1
+  end
+
+  def is_dead?(x, y)
+    !is_alive?(x, y)
+  end
+
 end
 
 class Coordinates < OpenStruct; end
