@@ -61,7 +61,7 @@ class Board
     `#{context}.fill()`
     `#{context}.lineWidth = 5`
     `#{context}.strokeStyle = "black"`
-    `context.stroke()`
+    `#{context}.stroke()`
   end
 
   def fill_cell(x, y)
