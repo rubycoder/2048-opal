@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
-require 'opal'
+require 'opal'  # a
 require 'opal-jquery'
 require 'forwardable'
 require 'ostruct'
+require_relative 'tile'
 require_relative 'interval'
 
 class Board
@@ -12,6 +13,11 @@ class Board
 
   CELL_HEIGHT = 15
   CELL_WIDTH  = 15
+
+  COLUMNS = 4
+  ROWS    = 4
+  SQUARE_EDGE  = 40
+  BORDER_SIZE  =  5
 
   def initialize
     @height  = `$(window).height()`
@@ -22,10 +28,40 @@ class Board
     @max_y   = (width / CELL_WIDTH).floor
     @state   = blank_state
     @seed    = []
+    @tiles   = []
+
+    tile_max_height = (0.9 * @height / ROWS).floor
+    tile_max_width  = (0.9 * @width  / COLUMNS).floor
+    @tile_height = [tile_max_height, tile_max_width].min
+    @tile_width  = @tile_height
+
     draw_canvas
     add_mouse_event_listener
     add_demo_event_listener
     add_enter_event_listener
+  end
+
+  def draw_tileOLD(tile)
+    `#{canvas}.width  = #{width}`
+    `#{canvas}.height = #{height}`
+
+    `#{context}.moveTo(#{ tile.x      * @tile_width}, #{tile.y * @tile_height})`
+    `#{context}.lineTo(#{(tile.x + 1) * @tile_width}, #{tile.y * @tile_height})`
+
+    `#{context}.strokeStyle = "#eee"`
+    `#{context}.stroke()`
+  end
+
+  def draw_tile(tile)
+    `#{context}.rect(400, 400,
+                 200, 100)`
+    `#{context}.rect(0, 0,
+                 200, 100)`
+    `#{context}.fillStyle = "#8ED6FF"`
+    `#{context}.fill()`
+    `#{context}.lineWidth = 5`
+    `#{context}.strokeStyle = "black"`
+    `context.stroke()`
   end
 
   def fill_cell(x, y)
@@ -245,4 +281,6 @@ end
 class Coordinates < OpenStruct; end
 
 board = Board.new
-board.draw_canvas
+# board.draw_canvas
+tile = Tile.new(1,1)
+board.draw_tile(tile)
