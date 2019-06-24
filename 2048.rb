@@ -6,6 +6,7 @@ require 'forwardable'
 require 'ostruct'
 require_relative 'tile'
 require_relative 'interval'
+require_relative 'canvas'
 
 class Board
   attr_reader :height, :width, :canvas, :context, :max_x, :max_y
@@ -35,7 +36,7 @@ class Board
     @tile_height = [tile_max_height, tile_max_width].min
     @tile_width  = @tile_height
 
-    draw_canvas
+    #draw_grid
     add_mouse_event_listener
     add_demo_event_listener
     add_enter_event_listener
@@ -61,6 +62,15 @@ class Board
     `#{context}.fill()`
     `#{context}.lineWidth = 5`
     `#{context}.strokeStyle = "black"`
+    `#{context}.stroke()`
+  end
+
+  def draw_tile2(left, top, width, height, fill_style, line_width, stroke_style)
+    `#{context}.rect(#{left}, #{top}, #{width}, #{height})`
+    `#{context}.fillStyle = #{fill_style}`
+    `#{context}.fill()`
+    `#{context}.lineWidth = #{line_width}`
+    `#{context}.strokeStyle = #{stroke_style}`
     `#{context}.stroke()`
   end
 
@@ -98,7 +108,7 @@ class Board
   end
 
 
-  def draw_canvas
+  def draw_grid
     `#{canvas}.width  = #{width}`
     `#{canvas}.height = #{height}`
 
@@ -130,8 +140,8 @@ class Board
     h
   end
 
-  def redraw_canvas
-    draw_canvas
+  def redraw_grid
+    draw_grid
     state.each do |cell, liveness|
       fill_cell(cell[0], cell[1]) if liveness == 1
     end
@@ -205,7 +215,7 @@ class Board
 
   def tick
     self.state = new_state
-    redraw_canvas
+    #redraw_grid
   end
 
   # below methods added en masse, probably not all needed
@@ -281,6 +291,8 @@ end
 class Coordinates < OpenStruct; end
 
 board = Board.new
-# board.draw_canvas
+# board.draw_grid
 tile = Tile.new(1,1)
-board.draw_tile(tile)
+#board.draw_tile(tile)
+canvas = Canvas.new('board')
+canvas.draw_rectangle(50, 50, 100, 100, 'blue', 1, 'black')
