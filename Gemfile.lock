@@ -1,0 +1,23 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    ast (2.4.0)
+    opal (1.0.0)
+      ast (>= 2.3.0)
+      parser (= 2.5.3.0)
+    opal-jquery (0.4.4)
+      opal (>= 0.10.0, < 1.1)
+    parser (2.5.3.0)
+      ast (~> 2.4.0)
+    rake (12.3.2)
+
+PLATFORMS
+  x64-mingw32
+
+DEPENDENCIES
+  opal
+  opal-jquery
+  rake
+
+BUNDLED WITH
+   2.0.1

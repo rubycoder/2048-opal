@@ -8,6 +8,10 @@ require_relative 'tile'
 require_relative 'interval'
 require_relative 'canvas'
 
+puts '$global $gvars'
+p $global
+p $gvars
+
 class Board
   attr_reader :height, :width, :canvas, :context, :max_x, :max_y
   attr_accessor :state, :seed
@@ -289,6 +293,9 @@ class Board
 end
 
 class Coordinates < OpenStruct; end
+
+puts '$global'
+p $global
 
 board = Board.new
 # board.draw_grid
