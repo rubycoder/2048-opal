@@ -5,8 +5,10 @@ GEM
     opal (1.0.0)
       ast (>= 2.3.0)
       parser (= 2.5.3.0)
-    opal-jquery (0.4.4)
-      opal (>= 0.10.0, < 1.1)
+    opal-browser (0.2.0)
+      opal
+      paggio
+    paggio (0.2.6)
     parser (2.5.3.0)
       ast (~> 2.4.0)
     rake (12.3.2)
@@ -16,7 +18,8 @@ PLATFORMS
 
 DEPENDENCIES
   opal
-  opal-jquery
+  opal-browser
+  paggio
   rake
 
 BUNDLED WITH
